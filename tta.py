@@ -16,7 +16,8 @@ api = tweepy.API(auth)
 sid = SentimentIntensityAnalyzer()
 
 # Search for tweets containing the specified keyword or hashtag
-tweets = api.search(q="keyword or hashtag")
+keyword = "keyword or hashtag"
+tweets = api.search(q=keyword)
 
 # Analyze the sentiment of each tweet
 sentiments = []
@@ -24,18 +25,18 @@ for tweet in tweets:
   text = tweet.text
   sentiment = sid.polarity_scores(text)
   sentiments.append(sentiment)
-  
+
 # Aggregate the results and display an overall sentiment score
-positive_sentiments = [s for s in sentiments if s > 0]
-neutral_sentiments = [s for s in sentiments if s == 0]
-negative_sentiments = [s for s in sentiments if s < 0]
+positive_sentiments = [s for s in sentiments if s['compound'] > 0]
+neutral_sentiments = [s for s in sentiments if s['compound'] == 0]
+negative_sentiments = [s for s in sentiments if s['compound'] < 0]
 
 total = len(sentiments)
 pos_percent = len(positive_sentiments) / total
 neu_percent = len(neutral_sentiments) / total
 neg_percent = len(negative_sentiments) / total
 
-print("Overall sentiment score:")
+print("Overall sentiment score for tweets containing '%s':" % keyword)
 print("Positive: %.2f%%" % (pos_percent * 100))
 print("Neutral: %.2f%%" % (neu_percent * 100))
 print("Negative: %.2f%%" % (neg_percent * 100))
